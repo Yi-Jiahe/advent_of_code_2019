@@ -1,6 +1,6 @@
 defmodule Utils do
   def split_lines(input) do
-    String.split(input, ~r{ *\r\n *| *\n *}, trim: true)
+    String.split(input, ~r{ *\r*\n *}, trim: true)
   end
 
   def print_int_list(int_list) do
