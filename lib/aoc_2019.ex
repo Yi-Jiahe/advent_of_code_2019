@@ -11,6 +11,8 @@ defmodule AOC_2019 do
         DayTwo.main()
       3 ->
         DayThree.main()
+      4 ->
+        DayFour.main()
     end
   end
 end
