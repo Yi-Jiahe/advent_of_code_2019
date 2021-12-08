@@ -72,13 +72,30 @@ defmodule DayEight do
     end
   end
 
-  @spec main(
-          binary
-          | maybe_improper_list(
-              binary | maybe_improper_list(any, binary | []) | char,
-              binary | []
-            )
-        ) :: any
+  def replace_pixel(row, i, width) do
+    if i == width do
+      row
+    else
+      image_pixel = row
+      |> to_charlist()
+      |> Enum.at(i)
+    case <<image_pixel>> do
+        "0" ->
+          row = row
+          |> to_charlist()
+          |> List.replace_at(i, "█")
+          |> to_string()
+          replace_pixel(row, i+1, width)
+        "1" ->
+          row = row
+          |> to_charlist()
+          |> List.replace_at(i, " ")
+          |> to_string()
+          replace_pixel(row, i+1, width)
+      end
+    end
+  end
+
   def main(filename \\ "./puzzle_inputs/day_8/password.txt") do
     case File.read(filename) do
       {:ok, body} ->
@@ -96,11 +113,10 @@ defmodule DayEight do
         image = String.duplicate("2", width)
         |> List.duplicate(height)
         merge_layers(layers, image, {width, height})
+        |> Enum.map(&replace_pixel(&1, 0, width))
         |> Enum.each(&IO.inspect(&1))
-        |> IO.inspect()
       {:error, reason} ->
         IO.puts("Error: #{reason}")
     end
   end
-
 end
