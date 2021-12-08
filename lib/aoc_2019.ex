@@ -19,6 +19,8 @@ defmodule AOC_2019 do
         DaySix.main()
       7 ->
         DaySeven.main()
+      8 ->
+        DayEight.main()
     end
   end
 end
