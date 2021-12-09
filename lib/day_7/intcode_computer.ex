@@ -165,6 +165,7 @@ defmodule Day7.IntcodeComputer do
       99 ->
         # Halt
         {intcode, i, 99, input_buffer, output_buffer}
+
       x ->
         IO.puts("Something went wrong: #{x}")
         {intcode, i, x, input_buffer, output_buffer}

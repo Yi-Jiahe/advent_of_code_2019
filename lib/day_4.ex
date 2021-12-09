@@ -22,7 +22,8 @@ defmodule DayFour do
     end
 
     def criteria_met(password) do
-      String.length(password) == 6 and has_same_adjacent_digits(password) and DayFour.never_decreases(password)
+      String.length(password) == 6 and has_same_adjacent_digits(password) and
+        DayFour.never_decreases(password)
     end
 
     def count_matching_passwords(range) do
@@ -62,13 +63,14 @@ defmodule DayFour do
             false
           end
         else
-          has_group_of_two(password, i+1, digit, group_size)
+          has_group_of_two(password, i + 1, digit, group_size)
         end
       end
     end
 
     def criteria_met(password) do
-      String.length(password) == 6 and has_group_of_two(password) and DayFour.never_decreases(password)
+      String.length(password) == 6 and has_group_of_two(password) and
+        DayFour.never_decreases(password)
     end
 
     def count_matching_passwords(range) do
@@ -88,7 +90,7 @@ defmodule DayFour do
   def never_decreases(password) do
     {digit, _} =
       String.at(password, 0)
-      |> Integer.parse
+      |> Integer.parse()
 
     never_decreases(password, 1, digit)
   end
@@ -96,7 +98,7 @@ defmodule DayFour do
   def never_decreases(password, i, last_digit) do
     {digit, _} =
       String.at(password, i)
-      |> Integer.parse
+      |> Integer.parse()
 
     if digit < last_digit do
       false

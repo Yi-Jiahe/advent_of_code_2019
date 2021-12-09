@@ -97,7 +97,6 @@ defmodule DaySeven do
       Day7.Server.add_output_process(e, thrusters)
 
       Day7.Server.start(a)
-
     end
 
     def find_thruster_signal(phase_setting_sequence, intcode, thrusters) do
@@ -158,7 +157,6 @@ defmodule DaySeven do
   end
 
   def main(filename \\ "./puzzle_inputs/day_7/amplifier_controller_software.txt") do
-
     case File.read(filename) do
       {:ok, body} ->
         intcode = IntcodeComputer.parse_intcode_from_string(body)
@@ -168,6 +166,7 @@ defmodule DaySeven do
 
         {:ok, thrusters} = Day7.Thrusters.start_link([])
         PartTwo.find_max_thruster_signal(intcode, thrusters)
+
       {:error, reason} ->
         IO.puts("Error: #{reason}")
     end

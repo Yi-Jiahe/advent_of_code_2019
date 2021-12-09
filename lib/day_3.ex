@@ -366,7 +366,10 @@ defmodule DayThree do
         paths = parse_input(body)
 
         answer = part_one(paths)
-        IO.puts("The Manhattan distance from the central port to the closest intersection is #{answer}")
+
+        IO.puts(
+          "The Manhattan distance from the central port to the closest intersection is #{answer}"
+        )
 
         answer = part_two(paths)
         IO.puts("The fewest combined steps toan intersection is #{answer}")

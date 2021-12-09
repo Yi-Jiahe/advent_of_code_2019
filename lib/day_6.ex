@@ -11,7 +11,12 @@ defmodule DaySix do
     else
       {[parent, child], orbits} = List.pop_at(orbits, 0)
       tree = Map.put_new(tree, parent, [])
-      {_, tree} = Map.get_and_update(tree, parent, fn children -> {children, List.insert_at(children, -1, child)} end)
+
+      {_, tree} =
+        Map.get_and_update(tree, parent, fn children ->
+          {children, List.insert_at(children, -1, child)}
+        end)
+
       grow_tree(orbits, tree)
     end
   end
@@ -22,15 +27,17 @@ defmodule DaySix do
     if is_nil(children) do
       depth
     else
-      children_total = children
-      |> Enum.map(&count_orbits(tree, &1, total, depth+1))
-      |> Enum.sum()
+      children_total =
+        children
+        |> Enum.map(&count_orbits(tree, &1, total, depth + 1))
+        |> Enum.sum()
+
       children_total + depth
     end
   end
 
   def find_path_to_child(_, node, child, path) when node == child do
-      path
+    path
   end
 
   def find_path_to_child(tree, node, child, path) do
@@ -41,7 +48,7 @@ defmodule DaySix do
     if !is_nil(children) do
       children
       |> Enum.map(&find_path_to_child(tree, &1, child, path))
-      |> Enum.filter(&!is_nil(&1))
+      |> Enum.filter(&(!is_nil(&1)))
       |> Enum.at(0)
     end
   end
@@ -52,12 +59,15 @@ defmodule DaySix do
 
     common_root = MapSet.intersection(path_you, path_santa)
 
-    leg_you = MapSet.difference(path_you, common_root)
-    |> MapSet.to_list()
-    |> Enum.count()
-    leg_santa = MapSet.difference(path_santa, common_root)
-    |> MapSet.to_list()
-    |> Enum.count()
+    leg_you =
+      MapSet.difference(path_you, common_root)
+      |> MapSet.to_list()
+      |> Enum.count()
+
+    leg_santa =
+      MapSet.difference(path_santa, common_root)
+      |> MapSet.to_list()
+      |> Enum.count()
 
     leg_you - 1 + 1 + leg_santa
   end
@@ -76,7 +86,9 @@ defmodule DaySix do
         path_santa = DaySix.find_path_to_child(tree, "COM", "SAN", [])
         orbital_transfers = count_orbital_transfers(path_you, path_santa)
 
-        IO.puts("The minimum number of orbital transfers to get to santa is #{orbital_transfers}.")
+        IO.puts(
+          "The minimum number of orbital transfers to get to santa is #{orbital_transfers}."
+        )
 
       {:error, reason} ->
         IO.puts("Error: #{reason}")

@@ -3,9 +3,9 @@ defmodule DayEight do
     {width, height} = layer_shape
     layer_size = width * height
 
-    for i <- 0..height-1 do
-      for j <- 0..width-1, into: ""  do
-        String.at(string, (layer-1) * layer_size + i * width + j)
+    for i <- 0..(height - 1) do
+      for j <- 0..(width - 1), into: "" do
+        String.at(string, (layer - 1) * layer_size + i * width + j)
       end
     end
   end
@@ -20,7 +20,7 @@ defmodule DayEight do
   end
 
   def count_in_layer(layer, digit) do
-    for row <- layer, << pixel <- row >> do
+    for row <- layer, <<pixel <- row>> do
       if <<pixel>> == digit do
         1
       else
@@ -38,26 +38,38 @@ defmodule DayEight do
       image
     else
       {y, x} = {div(i, width), rem(i, width)}
-      row = image
-      |> Enum.at(y)
-      image_pixel = row
-      |> to_charlist()
-      |> Enum.at(x)
-      layer_pixel = layer
-      |> Enum.at(y)
-      |> to_charlist()
-      |> Enum.at(x)
+
+      row =
+        image
+        |> Enum.at(y)
+
+      image_pixel =
+        row
+        |> to_charlist()
+        |> Enum.at(x)
+
+      layer_pixel =
+        layer
+        |> Enum.at(y)
+        |> to_charlist()
+        |> Enum.at(x)
+
       case {<<image_pixel>>, <<layer_pixel>>} do
         {"2", p} ->
-          new_row = row
-          |> to_charlist()
-          |> List.replace_at(x, p)
-          |> to_string()
-          image = image
-          |> List.replace_at(y, new_row)
-          merge_pixel(image, layer, i+1, layer_shape)
+          new_row =
+            row
+            |> to_charlist()
+            |> List.replace_at(x, p)
+            |> to_string()
+
+          image =
+            image
+            |> List.replace_at(y, new_row)
+
+          merge_pixel(image, layer, i + 1, layer_shape)
+
         {_, _} ->
-          merge_pixel(image, layer, i+1, layer_shape)
+          merge_pixel(image, layer, i + 1, layer_shape)
       end
     end
   end
@@ -76,22 +88,29 @@ defmodule DayEight do
     if i == width do
       row
     else
-      image_pixel = row
-      |> to_charlist()
-      |> Enum.at(i)
-    case <<image_pixel>> do
+      image_pixel =
+        row
+        |> to_charlist()
+        |> Enum.at(i)
+
+      case <<image_pixel>> do
         "0" ->
-          row = row
-          |> to_charlist()
-          |> List.replace_at(i, "█")
-          |> to_string()
-          replace_pixel(row, i+1, width)
+          row =
+            row
+            |> to_charlist()
+            |> List.replace_at(i, "█")
+            |> to_string()
+
+          replace_pixel(row, i + 1, width)
+
         "1" ->
-          row = row
-          |> to_charlist()
-          |> List.replace_at(i, " ")
-          |> to_string()
-          replace_pixel(row, i+1, width)
+          row =
+            row
+            |> to_charlist()
+            |> List.replace_at(i, " ")
+            |> to_string()
+
+          replace_pixel(row, i + 1, width)
       end
     end
   end
@@ -102,19 +121,23 @@ defmodule DayEight do
         {width, height} = {25, 6}
         layers = parse_image_from_string(body, {width, height})
 
-        layer = layers
-        |> Enum.min_by(&count_in_layer(&1, "0"))
+        layer =
+          layers
+          |> Enum.min_by(&count_in_layer(&1, "0"))
 
         ones = count_in_layer(layer, "1")
         twos = count_in_layer(layer, "2")
         answer = ones * twos
         IO.puts("Answer: #{answer}")
 
-        image = String.duplicate("2", width)
-        |> List.duplicate(height)
+        image =
+          String.duplicate("2", width)
+          |> List.duplicate(height)
+
         merge_layers(layers, image, {width, height})
         |> Enum.map(&replace_pixel(&1, 0, width))
         |> Enum.each(&IO.inspect(&1))
+
       {:error, reason} ->
         IO.puts("Error: #{reason}")
     end

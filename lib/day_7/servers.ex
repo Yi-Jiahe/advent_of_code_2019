@@ -61,7 +61,7 @@ defmodule Day7.Server do
     end
   end
 
-  #Server API
+  # Server API
   @impl true
   def init(initial_state) do
     {:ok, initial_state}
@@ -94,11 +94,13 @@ defmodule Day7.Server do
 
   @impl true
   def handle_cast({:write, values}, state) do
-    {intcode_computer, i, intcode, input_buffer, output_buffer} = fetch_intcode_computer_args(state)
+    {intcode_computer, i, intcode, input_buffer, output_buffer} =
+      fetch_intcode_computer_args(state)
 
     input_buffer = Enum.concat([input_buffer, values])
 
-    {intcode, i, opcode, input_buffer, output_buffer} = IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
+    {intcode, i, opcode, input_buffer, output_buffer} =
+      IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
 
     {:ok, output_processes} = Map.fetch(state, :output_processes)
 
@@ -106,7 +108,13 @@ defmodule Day7.Server do
       dump_output_buffer(opcode, output_buffer, output_processes)
     end
 
-    new_intcode_computer = %IntcodeComputer{intcode: intcode, instruction_pointer: i, input_buffer: input_buffer, output_buffer: []}
+    new_intcode_computer = %IntcodeComputer{
+      intcode: intcode,
+      instruction_pointer: i,
+      input_buffer: input_buffer,
+      output_buffer: []
+    }
+
     intcode_computer = Map.merge(intcode_computer, new_intcode_computer)
 
     new_state = Map.replace!(state, :intcode_computer, intcode_computer)
@@ -115,11 +123,13 @@ defmodule Day7.Server do
 
   @impl true
   def handle_cast({:write_with_opcode, values, _opcode}, state) do
-    {intcode_computer, i, intcode, input_buffer, output_buffer} = fetch_intcode_computer_args(state)
+    {intcode_computer, i, intcode, input_buffer, output_buffer} =
+      fetch_intcode_computer_args(state)
 
     input_buffer = Enum.concat([input_buffer, values])
 
-    {intcode, i, opcode, input_buffer, output_buffer} = IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
+    {intcode, i, opcode, input_buffer, output_buffer} =
+      IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
 
     {:ok, output_processes} = Map.fetch(state, :output_processes)
 
@@ -127,7 +137,13 @@ defmodule Day7.Server do
       dump_output_buffer(opcode, output_buffer, output_processes)
     end
 
-    new_intcode_computer = %IntcodeComputer{intcode: intcode, instruction_pointer: i, input_buffer: input_buffer, output_buffer: []}
+    new_intcode_computer = %IntcodeComputer{
+      intcode: intcode,
+      instruction_pointer: i,
+      input_buffer: input_buffer,
+      output_buffer: []
+    }
+
     intcode_computer = Map.merge(intcode_computer, new_intcode_computer)
 
     new_state = Map.replace!(state, :intcode_computer, intcode_computer)
@@ -136,20 +152,30 @@ defmodule Day7.Server do
 
   @impl true
   def handle_cast({:add_output_process, pid}, state) do
-    {_, new_state} = Map.get_and_update!(state, :output_processes, fn p -> {p, List.insert_at(p, -1, pid)} end)
+    {_, new_state} =
+      Map.get_and_update!(state, :output_processes, fn p -> {p, List.insert_at(p, -1, pid)} end)
+
     {:noreply, new_state}
   end
 
   @impl true
   def handle_cast({:start}, state) do
-    {intcode_computer, i, intcode, input_buffer, output_buffer} = fetch_intcode_computer_args(state)
+    {intcode_computer, i, intcode, input_buffer, output_buffer} =
+      fetch_intcode_computer_args(state)
 
-    {intcode, i, opcode, input_buffer, output_buffer} = IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
+    {intcode, i, opcode, input_buffer, output_buffer} =
+      IntcodeComputer.parse_intcode(i, intcode, input_buffer, output_buffer)
 
     {:ok, output_processes} = Map.fetch(state, :output_processes)
     dump_output_buffer(opcode, output_buffer, output_processes)
 
-    new_intcode_computer = %IntcodeComputer{intcode: intcode, instruction_pointer: i, input_buffer: input_buffer, output_buffer: []}
+    new_intcode_computer = %IntcodeComputer{
+      intcode: intcode,
+      instruction_pointer: i,
+      input_buffer: input_buffer,
+      output_buffer: []
+    }
+
     intcode_computer = Map.merge(intcode_computer, new_intcode_computer)
 
     new_state = Map.replace!(state, :intcode_computer, intcode_computer)
@@ -160,30 +186,32 @@ end
 defmodule Day7.Thrusters do
   use GenServer
 
-    # Client API
-    def start_link(opts) do
-      GenServer.start_link(__MODULE__, 0, opts)
-    end
+  # Client API
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, 0, opts)
+  end
 
-    #Server API
-    @impl true
-    def init(state) do
-      {:ok, state, 5000}
-    end
+  # Server API
+  @impl true
+  def init(state) do
+    {:ok, state, 5000}
+  end
 
-    @impl true
-    def handle_cast({:write_with_opcode, values, opcode}, state) do
-      state = if opcode == 99 do
+  @impl true
+  def handle_cast({:write_with_opcode, values, opcode}, state) do
+    state =
+      if opcode == 99 do
         max(Enum.at(values, -1), state)
       else
         state
       end
-      {:noreply, state, 5000}
-    end
 
-    @impl true
-    def handle_info(:timeout, state) do
-      IO.puts("Max thruster value: #{state}")
-      {:noreply, state}
-    end
+    {:noreply, state, 5000}
+  end
+
+  @impl true
+  def handle_info(:timeout, state) do
+    IO.puts("Max thruster value: #{state}")
+    {:noreply, state}
+  end
 end
