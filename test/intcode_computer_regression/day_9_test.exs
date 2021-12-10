@@ -24,7 +24,8 @@ defmodule IntcodeComputerRegressionTest do
       |> Map.fetch!(:output_buffer)
       |> List.last()
 
-    n_digits = output
+    n_digits =
+      output
       |> to_string()
       |> String.length()
 

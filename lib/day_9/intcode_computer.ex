@@ -195,7 +195,8 @@ defmodule Day9.IntcodeComputer do
         #   Otherwise, it does nothing.
         value = get_value(state, i + 1, String.at(parameter_modes, 0))
 
-        new_i = if value == 0, do: get_value(state, i + 2, String.at(parameter_modes, 1)), else: i + 3
+        new_i =
+          if value == 0, do: get_value(state, i + 2, String.at(parameter_modes, 1)), else: i + 3
 
         new_state = struct(state, instruction_pointer: new_i)
 

@@ -20,6 +20,7 @@ defmodule Day9.Main do
 
         IO.puts("The coordinates of the distress signal are")
         Utils.print_int_list(coordinates)
+
       {:error, reason} ->
         IO.puts("Error: #{reason}")
     end
